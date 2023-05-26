@@ -1,0 +1,67 @@
+#include <Adafruit_GFX.h>
+#include <Adafruit_LEDBackpack.h>
+
+Adafruit_8x8matrix matrix = Adafruit_8x8matrix();
+
+const int buttonPin1 = 18;
+const int buttonPin2 = 19;
+const int buttonPin3 = 20;
+const int buttonPin4 = 21;
+
+int correctAnswer = 2; // Respuesta correcta (de 1 a 4)
+int userAnswer = 0;
+
+void setup() {
+  matrix.begin(0x70);
+  matrix.setBrightness(7);
+
+  pinMode(buttonPin1, INPUT_PULLUP);
+  pinMode(buttonPin2, INPUT_PULLUP);
+  pinMode(buttonPin3, INPUT_PULLUP);
+  pinMode(buttonPin4, INPUT_PULLUP);
+}
+
+void loop() {
+  displayQuestion();
+  userAnswer = getUserAnswer();
+
+  if (userAnswer == correctAnswer) {
+    displayResult(true);
+  } else {
+    displayResult(false);
+  }
+
+  delay(2000);
+}
+
+void displayQuestion() {
+  matrix.clear();
+
+  // Mostrar pregunta en la matriz de LED
+  // Puedes personalizar el diseño de la pregunta utilizando la función matrix.drawBitmap()
+
+  matrix.writeDisplay();
+}
+
+int getUserAnswer() {
+  while (true) {
+    if (digitalRead(buttonPin1) == LOW) {
+      return 1;
+    }
+    if (digitalRead(buttonPin2) == LOW) {
+      return 2;
+    }
+    if (digitalRead(buttonPin3) == LOW) {
+      return 3;
+    }
+    if (digitalRead(buttonPin4) == LOW) {
+      return 4;
+    }
+  }
+}
+
+void displayResult(bool isCorrect) {
+  matrix.clear();
+
+  if (isCorrect) {
+    matrix.drawBitmap(0, 0,  PROGMEM);
